@@ -19,12 +19,22 @@ export default function LoginPage() {
     setLoading(true);
     
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Wait for auth context to save cookie via API route before redirecting
-      setTimeout(() => {
-        toast.success("Login successful");
-        router.push("/admin");
-      }, 1000);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const token = await userCredential.user.getIdToken();
+      
+      const res = await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to create session");
+      }
+
+      toast.success("Login successful");
+      router.push("/admin");
     } catch (error: any) {
       toast.error(error.message || "Failed to login");
       setLoading(false);

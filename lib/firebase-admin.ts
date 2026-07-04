@@ -10,6 +10,9 @@ if (!getApps().length) {
   if (process.env.FIREBASE_ADMIN_CREDENTIALS) {
     credentialData = JSON.parse(Buffer.from(process.env.FIREBASE_ADMIN_CREDENTIALS, 'base64').toString('utf8'));
   } else {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Missing FIREBASE_ADMIN_CREDENTIALS environment variable in Vercel.");
+    }
     // Local fallback
     const fs = require('fs');
     const path = require('path');
