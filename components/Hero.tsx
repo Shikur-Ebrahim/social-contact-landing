@@ -12,23 +12,22 @@ interface HeroProps {
 
 export const Hero = ({ businessName, title, subtitle, logoUrl, themeColor }: HeroProps) => {
   return (
-    <div className="text-center px-4 max-w-3xl mx-auto">
+    <div className="w-full">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col items-center"
+        className="w-full"
       >
         {logoUrl ? (
           <img 
             src={logoUrl} 
             alt={businessName} 
-            className="w-32 h-32 rounded-full object-cover shadow-xl border-4"
-            style={{ borderColor: themeColor }}
+            className="w-full aspect-[16/9] object-cover shadow-md"
           />
         ) : (
           <div 
-            className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-xl"
+            className="w-full aspect-[16/9] flex items-center justify-center text-6xl font-bold text-white shadow-md"
             style={{ backgroundColor: themeColor }}
           >
             {businessName.charAt(0).toUpperCase()}

@@ -114,12 +114,13 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-[100dvh] relative pt-12 pb-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-start text-center"
+      className="min-h-[100dvh] relative pb-6 flex flex-col items-center justify-start text-center"
       style={{
         background: `radial-gradient(circle at top, ${safeSettings.theme}20 0%, transparent 60%)`
       }}
     >
-      <div className="flex-1 w-full max-w-lg mx-auto space-y-4">
+      {/* Full width Hero */}
+      <div className="w-full">
         <Hero 
           businessName={safeSettings.businessName}
           title={safeSettings.heroTitle}
@@ -127,12 +128,13 @@ export default function Home() {
           logoUrl={safeSettings.logoUrl}
           themeColor={safeSettings.theme}
         />
+      </div>
 
-        <div className="space-y-3 pb-8">
-          {visibleLinks.map((link, i) => (
-            <SocialCard key={i} {...link} themeColor={safeSettings.theme} />
-          ))}
-        </div>
+      {/* Constrained and padded Social Cards */}
+      <div className="flex-1 w-full max-w-lg mx-auto space-y-3 px-4 sm:px-6 mt-4 pb-8">
+        {visibleLinks.map((link, i) => (
+          <SocialCard key={i} {...link} themeColor={safeSettings.theme} />
+        ))}
       </div>
 
       <CountdownRedirect 
