@@ -1,65 +1,145 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { AppSettings } from "../types";
+import { defaultSettings, subscribeToSettings } from "../lib/firestore";
+import { Hero } from "../components/Hero";
+import { SocialCard } from "../components/SocialCard";
+import { CountdownRedirect } from "../components/CountdownRedirect";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { 
+  MessageCircle, 
+  Phone, 
+  MessageSquare,
+  Send
+} from "lucide-react";
+import { Facebook, Instagram } from "../components/icons";
 
 export default function Home() {
+  const [settings, setSettings] = useState<AppSettings | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToSettings((data) => {
+      setSettings(data);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (!settings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size={48} />
+      </div>
+    );
+  }
+
+  // Fallback to default if values are empty strings but property exists
+  const safeSettings = { ...defaultSettings, ...settings };
+
+  const socialLinks = [
+    {
+      platform: "telegram",
+      url: safeSettings.telegram,
+      visible: safeSettings.telegramVisible,
+      icon: Send,
+      title: "Telegram",
+      subtitle: "Chat with us instantly",
+      gradientFrom: "#0088cc",
+      gradientTo: "#00b2ff",
+    },
+    {
+      platform: "whatsapp",
+      url: safeSettings.whatsapp,
+      visible: safeSettings.whatsappVisible,
+      icon: MessageCircle,
+      title: "WhatsApp",
+      subtitle: "Send us a message",
+      gradientFrom: "#25D366",
+      gradientTo: "#128C7E",
+    },
+    {
+      platform: "imo",
+      url: safeSettings.imo,
+      visible: safeSettings.imoVisible,
+      icon: MessageSquare,
+      title: "IMO",
+      subtitle: "Video and voice calls",
+      gradientFrom: "#0056b3",
+      gradientTo: "#00a1ff",
+    },
+    {
+      platform: "instagram",
+      url: safeSettings.instagram,
+      visible: safeSettings.instagramVisible,
+      icon: Instagram,
+      title: "Instagram",
+      subtitle: "Follow our daily updates",
+      gradientFrom: "#833AB4",
+      gradientTo: "#F77737",
+    },
+    {
+      platform: "facebook",
+      url: safeSettings.facebook,
+      visible: safeSettings.facebookVisible,
+      icon: Facebook,
+      title: "Facebook",
+      subtitle: "Connect with our community",
+      gradientFrom: "#1877F2",
+      gradientTo: "#3b5998",
+    },
+    {
+      platform: "phone",
+      url: safeSettings.phone ? `tel:${safeSettings.phone}` : "",
+      visible: safeSettings.phoneVisible,
+      icon: Phone,
+      title: "Phone Call",
+      subtitle: "Call us directly",
+      gradientFrom: "#4ade80",
+      gradientTo: "#16a34a",
+    },
+    {
+      platform: "telegramChannel",
+      url: safeSettings.telegramChannel,
+      visible: safeSettings.telegramChannelVisible,
+      icon: Send,
+      title: "Telegram Channel",
+      subtitle: "Join our official channel",
+      gradientFrom: "#0088cc",
+      gradientTo: "#00b2ff",
+    },
+  ];
+
+  const visibleLinks = socialLinks.filter(link => link.visible);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main 
+      className="min-h-screen relative py-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center"
+      style={{
+        background: `radial-gradient(circle at top, ${safeSettings.theme}20 0%, transparent 60%)`
+      }}
+    >
+      <div className="flex-1 w-full max-w-lg mx-auto space-y-6">
+        <Hero 
+          businessName={safeSettings.businessName}
+          title={safeSettings.heroTitle}
+          subtitle={safeSettings.heroSubtitle}
+          logoUrl={safeSettings.logoUrl}
+          themeColor={safeSettings.theme}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        <div className="space-y-3 pb-16">
+          {visibleLinks.map((link, i) => (
+            <SocialCard key={i} {...link} themeColor={safeSettings.theme} />
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+
+      <CountdownRedirect 
+        enabled={safeSettings.autoRedirect} 
+        delay={safeSettings.redirectDelay} 
+        url={safeSettings.telegramChannel} 
+      />
+    </main>
   );
 }
