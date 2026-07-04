@@ -114,12 +114,12 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-screen relative py-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center"
+      className="min-h-[100dvh] relative pt-12 pb-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-start text-center"
       style={{
         background: `radial-gradient(circle at top, ${safeSettings.theme}20 0%, transparent 60%)`
       }}
     >
-      <div className="flex-1 w-full max-w-lg mx-auto space-y-6">
+      <div className="flex-1 w-full max-w-lg mx-auto space-y-4">
         <Hero 
           businessName={safeSettings.businessName}
           title={safeSettings.heroTitle}
@@ -128,7 +128,7 @@ export default function Home() {
           themeColor={safeSettings.theme}
         />
 
-        <div className="space-y-3 pb-16">
+        <div className="space-y-3 pb-8">
           {visibleLinks.map((link, i) => (
             <SocialCard key={i} {...link} themeColor={safeSettings.theme} />
           ))}
