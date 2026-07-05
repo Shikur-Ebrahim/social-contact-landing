@@ -26,16 +26,9 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-  if (!settings) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size={48} />
-      </div>
-    );
-  }
-
-  // Fallback to default if values are empty strings but property exists
-  const safeSettings = { ...defaultSettings, ...settings };
+  // INSTANT LOAD: immediately render using defaultSettings. 
+  // It will silently update when Firestore live data arrives.
+  const safeSettings = settings ? { ...defaultSettings, ...settings } : defaultSettings;
 
   const socialLinks = [
     {

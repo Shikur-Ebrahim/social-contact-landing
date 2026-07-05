@@ -23,7 +23,7 @@ export const defaultSettings: AppSettings = {
   instagramVisible: true,
   facebook: "",
   facebookVisible: false,
-  logoUrl: "",
+  logoUrl: "/logo.png",
   theme: "#2563eb",
   autoRedirect: false,
   redirectDelay: 5,

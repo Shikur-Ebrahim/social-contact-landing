@@ -24,6 +24,7 @@ export const Hero = ({ businessName, title, subtitle, logoUrl, themeColor }: Her
             src={logoUrl} 
             alt={businessName} 
             className="w-full aspect-[16/9] object-cover shadow-md"
+            fetchPriority="high"
           />
         ) : (
           <div 
